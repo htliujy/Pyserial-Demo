@@ -6,6 +6,20 @@ from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QTimer
 from ui_demo_1 import Ui_Form
 
+"""
+        self.s1__box_3.setItemText(0, _translate("Form", "115200"))
+        self.s1__box_3.setItemText(1, _translate("Form", "2400"))
+        self.s1__box_3.setItemText(2, _translate("Form", "4800"))
+        self.s1__box_3.setItemText(3, _translate("Form", "9600"))
+        self.s1__box_3.setItemText(4, _translate("Form", "14400"))
+        self.s1__box_3.setItemText(5, _translate("Form", "19200"))
+        self.s1__box_3.setItemText(6, _translate("Form", "38400"))
+        self.s1__box_3.setItemText(7, _translate("Form", "57600"))
+        self.s1__box_3.setItemText(8, _translate("Form", "76800"))
+        self.s1__box_3.setItemText(9, _translate("Form", "12800"))
+        self.s1__box_3.setItemText(10, _translate("Form", "230400"))
+        self.s1__box_3.setItemText(11, _translate("Form", "460800"))
+"""
 
 class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
     def __init__(self):
@@ -52,6 +66,7 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
 
         # 清除接收窗口
         self.s2__clear_button.clicked.connect(self.receive_data_clear)
+        self.clear_Button.clicked.connect(self.clear_RT_num)
 
     # 串口检测
     def port_check(self):
@@ -75,7 +90,7 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
     # 打开串口
     def port_open(self):
         self.ser.port = self.s1__box_2.currentText()
-        self.ser.baudrate = int(self.s1__box_3.currentText())
+        self.ser.baudrate = int(self.lineEdit_4.text())
         self.ser.bytesize = int(self.s1__box_4.currentText())
         self.ser.stopbits = int(self.s1__box_6.currentText())
         self.ser.parity = self.s1__box_5.currentText()
@@ -182,6 +197,7 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
         else:
             self.timer_send.stop()
             self.lineEdit_3.setEnabled(True)
+    
 
     # 清除显示
     def send_data_clear(self):
@@ -189,6 +205,12 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
 
     def receive_data_clear(self):
         self.s2__receive_text.setText("")
+
+    def clear_RT_num(self):
+        self.data_num_sended = 0
+        self.data_num_received = 0
+        self.lineEdit_2.setText(str(self.data_num_sended))
+        self.lineEdit.setText(str(self.data_num_received))
 
 
 if __name__ == '__main__':
