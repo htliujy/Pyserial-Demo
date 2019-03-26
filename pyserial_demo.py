@@ -1,10 +1,17 @@
 import sys
+import os
 import serial
 import serial.tools.list_ports
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QTimer
 from ui_demo_1 import Ui_Form
+from uart_file import File_Deal
+from PyQt5.QtWidgets import QFileDialog
+
+import pandas as pd
+import re
+
 
 """
         self.s1__box_3.setItemText(0, _translate("Form", "115200"))
@@ -35,6 +42,10 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
         self.lineEdit.setText(str(self.data_num_received))
         self.data_num_sended = 0
         self.lineEdit_2.setText(str(self.data_num_sended))
+
+        filename = ''
+        self.received_data = []
+        filedeal = File_Deal()
 
     def init(self):
         # 串口检测按钮
@@ -68,6 +79,9 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
         self.s2__clear_button.clicked.connect(self.receive_data_clear)
         self.clear_Button.clicked.connect(self.clear_RT_num)
 
+        #保存数据
+        #self.data_save_Button.clicked.connect(self.getfilename)
+
     # 串口检测
     def port_check(self):
         # 检测所有存在的串口，将信息存储在字典中
@@ -94,6 +108,16 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
         self.ser.bytesize = int(self.s1__box_4.currentText())
         self.ser.stopbits = int(self.s1__box_6.currentText())
         self.ser.parity = self.s1__box_5.currentText()
+        self.filename = str(self.lineEdit_filename.text())
+        if self.filename != '':
+            if self.filename.endswith('.csv'):
+                pass
+            else:
+                self.filename = self.filename + '.csv'
+                
+            self.filename = os.path.join(os.getcwd(), self.filename)
+            self.lineEdit_filename.clear()
+
 
         try:
             self.ser.open()
@@ -126,6 +150,7 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
         self.data_num_sended = 0
         self.lineEdit_2.setText(str(self.data_num_sended))
         self.formGroupBox1.setTitle("串口状态（已关闭）")
+        self.save_to_cvs()
 
     # 发送数据
     def data_send(self):
@@ -166,6 +191,18 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
         if num > 0:
             data = self.ser.read(num)
             num = len(data)
+
+            # hex 保存
+            
+            if self.filename != '':
+                for i in range(0, len(data)):
+                    self.received_data.append(int(data[i]))
+
+                if len(self.received_data) > 1000:
+                    #self.save_to_cvs()
+                    #self.received_data.clear()
+                    pass
+
             # hex显示
             if self.hex_receive.checkState():
                 out_s = ''
@@ -186,8 +223,14 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
             textCursor.movePosition(textCursor.End)
             # 设置光标到text中去
             self.s2__receive_text.setTextCursor(textCursor)
+
+
+
         else:
             pass
+        
+        
+
 
     # 定时发送数据
     def data_send_timer(self):
@@ -211,6 +254,13 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
         self.data_num_received = 0
         self.lineEdit_2.setText(str(self.data_num_sended))
         self.lineEdit.setText(str(self.data_num_received))
+    
+    def save_to_cvs(self):
+        if self.filename != '':
+            dataframe = pd.DataFrame({'ADC_curent':self.received_data})
+            dataframe.to_csv(self.filename,index=False,sep=',')
+            self.received_data.clear()
+        
 
 
 if __name__ == '__main__':

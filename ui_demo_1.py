@@ -141,12 +141,16 @@ class Ui_Form(object):
         self.dw = QtWidgets.QLabel(Form)
         self.dw.setGeometry(QtCore.QRect(420, 390, 54, 20))
         self.dw.setObjectName("dw")
-        self.data_save_Button = QtWidgets.QPushButton(Form)
-        self.data_save_Button.setGeometry(QtCore.QRect(594, 422, 101, 31))
-        self.data_save_Button.setObjectName("data_save_Button")
         self.curveShow_Button = QtWidgets.QPushButton(Form)
         self.curveShow_Button.setGeometry(QtCore.QRect(610, 130, 91, 31))
         self.curveShow_Button.setObjectName("curveShow_Button")
+        self.lineEdit_filename = QtWidgets.QLineEdit(Form)
+        self.lineEdit_filename.setGeometry(QtCore.QRect(330, 430, 341, 21))
+        self.lineEdit_filename.setText("")
+        self.lineEdit_filename.setObjectName("lineEdit_filename")
+        self.s1__lb_7 = QtWidgets.QLabel(Form)
+        self.s1__lb_7.setGeometry(QtCore.QRect(220, 430, 111, 21))
+        self.s1__lb_7.setObjectName("s1__lb_7")
         self.verticalGroupBox.raise_()
         self.verticalGroupBox_2.raise_()
         self.formGroupBox.raise_()
@@ -159,8 +163,9 @@ class Ui_Form(object):
         self.timer_send_cb.raise_()
         self.lineEdit_3.raise_()
         self.dw.raise_()
-        self.data_save_Button.raise_()
         self.curveShow_Button.raise_()
+        self.lineEdit_filename.raise_()
+        self.s1__lb_7.raise_()
 
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -204,6 +209,16 @@ class Ui_Form(object):
         self.timer_send_cb.setText(_translate("Form", "定时发送"))
         self.lineEdit_3.setText(_translate("Form", "1000"))
         self.dw.setText(_translate("Form", "ms/次"))
-        self.data_save_Button.setText(_translate("Form", "保存数据"))
         self.curveShow_Button.setText(_translate("Form", "曲线显示"))
+        self.s1__lb_7.setText(_translate("Form", "文件名（cvs）："))
+
+
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    Form = QtWidgets.QWidget()
+    ui = Ui_Form()
+    ui.setupUi(Form)
+    Form.show()
+    sys.exit(app.exec_())
 
