@@ -9,6 +9,8 @@ from ui_demo_1 import Ui_Form
 from uart_file import File_Deal
 from PyQt5.QtWidgets import QFileDialog
 
+import glob
+
 import pandas as pd
 import re
 
@@ -86,12 +88,28 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
     def port_check(self):
         # 检测所有存在的串口，将信息存储在字典中
         self.Com_Dict = {}
+
         port_list = list(serial.tools.list_ports.comports())
+        """
+        port_list = []
+        if sys.platform.startswith('win'):
+            port_list = ['COM%s' % (i + 1) for i in range(256)]
+        elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
+            # this excludes your current terminal "/dev/tty"
+            port_list = glob.glob('/dev/tty[A-Za-z]*')
+        elif sys.platform.startswith('darwin'):
+            port_list = glob.glob('/dev/cu.*')
+        else:
+            raise EnvironmentError('Unsupported platform')
+        """
+        print(port_list)
+
         self.s1__box_2.clear()
         for port in port_list:
             self.Com_Dict["%s" % port[0]] = "%s" % port[1]
             self.s1__box_2.addItem(port[0])
         if len(self.Com_Dict) == 0:
+            #if len(port_list) == 0:
             self.state_label.setText(" 无串口")
 
     # 串口信息
@@ -193,7 +211,6 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
             num = len(data)
 
             # hex 保存
-            
             if self.filename != '':
                 for i in range(0, len(data)):
                     self.received_data.append(int(data[i]))
@@ -207,13 +224,14 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
             if self.hex_receive.checkState():
                 out_s = ''
                 for i in range(0, len(data)):
-                    out_s = out_s + '{:02X}'.format(data[i]) + ' '
+                    out_s = out_s + '{:02x}'.format(data[i]) + ' '
                 self.s2__receive_text.insertPlainText(out_s)
             else:
                 # 串口接收到的字符串为b'123',要转化成unicode字符串才能输出到窗口中去
                 self.s2__receive_text.insertPlainText(data.decode('iso-8859-1'))
 
             # 统计接收字符的数量
+            print(num)
             self.data_num_received += num
             self.lineEdit.setText(str(self.data_num_received))
 
