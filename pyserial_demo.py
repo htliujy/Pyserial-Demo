@@ -276,6 +276,7 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
         self.data_num_received = 0
         self.lineEdit_2.setText(str(self.data_num_sended))
         self.lineEdit.setText(str(self.data_num_received))
+        self.received_data.clear()
     
     def save_to_cvs(self):
         if self.filename != '':
