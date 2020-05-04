@@ -93,8 +93,8 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
         # 检测所有存在的串口，将信息存储在字典中
         self.Com_Dict = {}
 
-        port_list = list(serial.tools.list_ports.comports())
-        '''
+        #port_list = list(serial.tools.list_ports.comports())
+        
         port_list = []
         if sys.platform.startswith('win'):
             port_list = ['COM%s' % (i + 1) for i in range(256)]
@@ -105,12 +105,14 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
             port_list = glob.glob('/dev/ttys*')
         else:
             raise EnvironmentError('Unsupported platform')
-        '''
+        
 
         self.s1__box_2.clear()
         for port in port_list:
-            self.Com_Dict["%s" % port[0]] = "%s" % port[1]
-            self.s1__box_2.addItem(port[0])
+            #self.Com_Dict["%s" % port[0]] = "%s" % port[1]
+            #self.s1__box_2.addItem(port[0])
+            self.Com_Dict[port] = port
+            self.s1__box_2.addItem(port)
         if len(self.Com_Dict) == 0:
             #if len(port_list) == 0:
             self.state_label.setText(" 无串口")
