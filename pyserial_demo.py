@@ -1,18 +1,21 @@
 import sys
 import os
 import serial
+import glob
 import serial.tools.list_ports
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QTimer
+import pandas as pd
+
 from ui_demo_1 import Ui_Form
 from uart_file import File_Deal
-from PyQt5.QtWidgets import QFileDialog
+#from PyQt5.QtWidgets import QFileDialog
 
-import glob
+#import glob
 
-import pandas as pd
-import re
+
+#import re
 
 
 """
@@ -37,6 +40,7 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
         self.init()
         self.setWindowTitle("串口小助手")
         self.ser = serial.Serial()
+        #self.ser.set_buffer_size(rx_size = 12800, tx_size = 12800)    #Mac 系统下找不到该方法
         self.port_check()
 
         # 接收数据和发送数据数目置零
@@ -45,9 +49,9 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
         self.data_num_sended = 0
         self.lineEdit_2.setText(str(self.data_num_sended))
 
-        filename = ''
+        self.filename = ''
         self.received_data = []
-        filedeal = File_Deal()
+        self.filedeal = File_Deal()
 
     def init(self):
         # 串口检测按钮
@@ -90,7 +94,7 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
         self.Com_Dict = {}
 
         port_list = list(serial.tools.list_ports.comports())
-        """
+        '''
         port_list = []
         if sys.platform.startswith('win'):
             port_list = ['COM%s' % (i + 1) for i in range(256)]
@@ -98,11 +102,10 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
             # this excludes your current terminal "/dev/tty"
             port_list = glob.glob('/dev/tty[A-Za-z]*')
         elif sys.platform.startswith('darwin'):
-            port_list = glob.glob('/dev/cu.*')
+            port_list = glob.glob('/dev/ttys*')
         else:
             raise EnvironmentError('Unsupported platform')
-        """
-        print(port_list)
+        '''
 
         self.s1__box_2.clear()
         for port in port_list:
@@ -169,6 +172,7 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
         self.lineEdit_2.setText(str(self.data_num_sended))
         self.formGroupBox1.setTitle("串口状态（已关闭）")
         self.save_to_cvs()
+        
 
     # 发送数据
     def data_send(self):
@@ -231,7 +235,7 @@ class Pyqt5_Serial(QtWidgets.QWidget, Ui_Form):
                 self.s2__receive_text.insertPlainText(data.decode('iso-8859-1'))
 
             # 统计接收字符的数量
-            print(num)
+            #print(num)
             self.data_num_received += num
             self.lineEdit.setText(str(self.data_num_received))
 
